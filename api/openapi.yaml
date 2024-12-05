@@ -7,12 +7,6 @@ info:
     name: EduPulse Support
     email: support@edupulse.com
   version: 2.0.0
-servers:
-- url: https://virtserver.swaggerhub.com/EKOEMTZO_1/EduPulse2.0/2.0.0
-  description: SwaggerHub API Auto Mocking
-- url: https://virtserver.swaggerhub.com/EKOEMTZO_1/EduPulse/1.0.0
-  description: SwaggerHub API Auto Mocking
-- url: http://api.edupulse.com
 paths:
   /user/{userId}:
     get:
