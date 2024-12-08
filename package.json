@@ -4,8 +4,10 @@
   "description": "API for EduPulse",
   "main": "index.js",
   "scripts": {
-	"prestart": "npm install",
-	"start": "node index.js"
+    "prestart": "npm install",
+    "start": "node index.js",
+    "cypress:open":"cypress open",
+    "cypress:run":"cypress run"
   },
   "keywords": [
     "swagger"
@@ -16,5 +18,8 @@
     "connect": "^3.2.0",
     "js-yaml": "^3.3.0",
     "oas3-tools": "^2.2.3"
+  },
+  "devDependencies": {
+    "cypress": "^13.16.1"
   }
 }
