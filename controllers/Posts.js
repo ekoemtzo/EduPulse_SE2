@@ -43,15 +43,20 @@ module.exports.showPost = function showPost (req, res, next, postId) {
     });
 };
 
-module.exports.showUserPosts = function showUserPosts (req, res, next, userId) {
-  Posts.showUserPosts(userId)
+module.exports.showUserPosts = function showUserPosts(req, res, next, userId, injectedService = Posts) {
+  injectedService.showUserPosts(userId)
     .then(function (response) {
-      utils.writeJson(res, response);
+      if (!response || response.length === 0) {
+        utils.writeJson(res, { error: 'User not found' }, 404);
+      } else {
+        utils.writeJson(res, response, 200);
+      }
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (err) {
+      utils.writeJson(res, { error: err.message }, 500);
     });
 };
+
 
 module.exports.uploadPost = function uploadPost (req, res, next, body) {
   Posts.uploadPost(body)
