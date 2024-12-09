@@ -1,3 +1,4 @@
+
 const http = require("http");
 const test = require("ava");
 const got = require("got");
@@ -12,7 +13,7 @@ test.before(async (t) => {
   const { port } = server.address();
   t.context.got = got.extend({
     responseType: "json",
-    prefixUrl: http://localhost:${port},
+    prefixUrl: 'http://localhost:${port}',
   });
 });
 
