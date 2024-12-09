@@ -1,4 +1,3 @@
-import test from 'ava';
 import * as controller from '../controllers/Posts.js'; // Adjust the path
 import * as utils from '../utils/writer.js'; // Adjust the path
 
