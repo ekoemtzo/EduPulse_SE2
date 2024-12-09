@@ -1,6 +1,35 @@
 'use strict';
 
+const mockData = {
+  users: [
+    {
+      userId: 1,
+      playlists: [
+        { playlistId: 101, name: 'Playlist 1' },
+        { playlistId: 102, name: 'Playlist 2' }
+      ]
+    },
+    {
+      userId: 2,
+      playlists: [
+        { playlistId: 201, name: 'Playlist A' },
+        { playlistId: 202, name: 'Playlist B' }
+      ]
+    },
+    {
+      userId: 3,  // User with no playlists
+      playlists: []
+    },
+    {
+      userId: 4,  // New user for testing
+      playlists: [
+        { playlistId: 301, name: 'Test Playlist' }
+      ]
+    }
+  ]
+};
 
+exports.mockData = mockData;
 /**
  * Create a playlist
  * FR-4 A logged in user must be able to create a playlist
@@ -8,19 +37,41 @@
  * body NewPlaylist 
  * returns Playlist
  **/
+
+
 exports.createPlaylist = function(body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+  return new Promise(function(resolve) {
+    if (!body || !body.name) {
+      return resolve({ 
+        message: 'Playlist name is required',
+        statusCode: 200 
+      });
     }
+
+    const user = mockData.users.find(user => user.userId === parseInt(body.userId));
+    if (!user) {
+      return resolve({ 
+        message: 'User not found',
+        statusCode: 200 
+      });
+    }
+
+    const newPlaylist = { 
+      playlistId: 103,
+      name: body.name 
+    };
+
+    user.playlists.push(newPlaylist);
+
+    return resolve({ 
+      message: 'Playlist created successfully',
+      playlist: {
+        name: body.name
+      },
+      statusCode: 200 
+    });
   });
-}
-
-
+};
 /**
  * Delete a playlist
  * US-11 Edit Playlist
@@ -29,11 +80,27 @@ exports.createPlaylist = function(body) {
  * playlistId Long ID of the playlist to delete
  * no response value expected for this operation
  **/
-exports.deletePlaylist = function(userId,playlistId) {
+
+
+
+exports.deletePlaylist = function(userId, playlistId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    const user = mockData.users.find(user => user.userId === parseInt(userId));
+    if (!user) {
+      return resolve({ message: 'User not found', statusCode: 200 });
+    }
+
+    const playlistIndex = user.playlists.findIndex(playlist => playlist.playlistId === parseInt(playlistId));
+    if (playlistIndex === -1) {
+      return resolve({ message: 'Playlist not found', statusCode: 200 });
+    }
+
+    user.playlists.splice(playlistIndex, 1);
+    resolve({ message: 'Playlist deleted successfully', statusCode: 400 });
   });
-}
+};
+
+
 
 
 /**
@@ -45,17 +112,25 @@ exports.deletePlaylist = function(userId,playlistId) {
  * playlistId Long ID of the playlist to edit
  * returns Playlist
  **/
-exports.editPlaylist = function(body,userId,playlistId) {
+exports.editPlaylist = function(body, userId, playlistId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+      const user = mockData.users.find(user => user.userId === parseInt(userId));
+      if (!user) {
+          return resolve({ message: 'User not found', statusCode: 200 });
+      }
+
+      const playlist = user.playlists.find(playlist => playlist.playlistId === parseInt(playlistId));
+      if (!playlist) {
+          return resolve({ message: 'Playlist not found', statusCode: 200 });
+      }
+
+      playlist.name = body.name;
+      resolve({ message: 'Playlist updated successfully', playlist, statusCode: 200 });
   });
-}
+};
+
+
+
 
 
 /**
@@ -66,14 +141,19 @@ exports.editPlaylist = function(body,userId,playlistId) {
  * returns List
  **/
 exports.showUserPlaylists = function(userId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+  return new Promise(function(resolve) {
+    const user = mockData.users.find(user => user.userId === parseInt(userId));
+    if (!user) {
+      return resolve({ 
+        message: 'User not found',
+        statusCode: 200 
+      });
     }
-  });
-}
 
+    return resolve({ 
+      message: 'Playlists retrieved successfully',
+      playlists: user.playlists,
+      statusCode: 200 
+    });
+  });
+};
