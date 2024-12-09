@@ -13,7 +13,7 @@ test.before(async (t) => {
   const { port } = server.address();
   t.context.got = got.extend({
     responseType: "json",
-    prefixUrl: 'http://localhost:${port}',
+    prefixUrl: `http://localhost:${port}`,
   });
 });
 
@@ -23,3 +23,7 @@ test.after.always(async (t) => {
   // Close the server
   t.context.server.close();
 });
+
+test("Test passes", (t) => {
+     t.pass();
+ });
