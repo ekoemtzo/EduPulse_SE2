@@ -1,5 +1,6 @@
 'use strict';
 
+//mock data to provide different cases for testing
 const mockData = {
   users: [
     {
@@ -10,26 +11,15 @@ const mockData = {
       ]
     },
     {
-      userId: 2,
-      playlists: [
-        { playlistId: 201, name: 'Playlist A' },
-        { playlistId: 202, name: 'Playlist B' }
-      ]
-    },
-    {
-      userId: 3,  // User with no playlists
+      userId: 2, 
       playlists: []
-    },
-    {
-      userId: 4,  // New user for testing
-      playlists: [
-        { playlistId: 301, name: 'Test Playlist' }
-      ]
     }
   ]
 };
 
 exports.mockData = mockData;
+
+
 /**
  * Create a playlist
  * FR-4 A logged in user must be able to create a playlist
@@ -37,8 +27,6 @@ exports.mockData = mockData;
  * body NewPlaylist 
  * returns Playlist
  **/
-
-
 exports.createPlaylist = function(body) {
   return new Promise(function(resolve) {
     if (!body || !body.name) {
@@ -72,6 +60,8 @@ exports.createPlaylist = function(body) {
     });
   });
 };
+
+
 /**
  * Delete a playlist
  * US-11 Edit Playlist
@@ -80,9 +70,6 @@ exports.createPlaylist = function(body) {
  * playlistId Long ID of the playlist to delete
  * no response value expected for this operation
  **/
-
-
-
 exports.deletePlaylist = function(userId, playlistId) {
   return new Promise(function(resolve, reject) {
     const user = mockData.users.find(user => user.userId === parseInt(userId));
@@ -99,8 +86,6 @@ exports.deletePlaylist = function(userId, playlistId) {
     resolve({ message: 'Playlist deleted successfully', statusCode: 400 });
   });
 };
-
-
 
 
 /**
@@ -130,9 +115,6 @@ exports.editPlaylist = function(body, userId, playlistId) {
 };
 
 
-
-
-
 /**
  * Returns all the Playlists of a user
  * US-11 Edit Playlist
@@ -146,6 +128,14 @@ exports.showUserPlaylists = function(userId) {
     if (!user) {
       return resolve({ 
         message: 'User not found',
+        statusCode: 200 
+      });
+    }
+
+    if (user.playlists.length === 0) {
+      return resolve({ 
+        message: 'No playlists found for this user',
+        playlists: [],
         statusCode: 200 
       });
     }
