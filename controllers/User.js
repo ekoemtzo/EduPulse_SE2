@@ -3,12 +3,28 @@
 var utils = require('../utils/writer.js');
 var User = require('../service/UserService');
 
-module.exports.getUser = function getUser (req, res, next, userId) {
+module.exports.getUser = function getUser(req, res, next, userId) {
+  // Validate userId
+  if (!Number.isInteger(Number(userId)) || Number(userId) <= 0) {
+    return utils.writeJson(
+      res,
+      { message: "'userId' must be a positive integer." },
+      400
+    );
+  }
+
   User.getUser(userId)
     .then(function (response) {
+      if (!response) {
+        return utils.writeJson(
+          res,
+          { error: "User not found" },
+          404
+        );
+      }
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (error) {
+      utils.writeJson(res, { error: "Internal Server Error" }, 500);
     });
 };
