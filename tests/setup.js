@@ -22,7 +22,3 @@ test.after.always(async (t) => {
   // Close the server
   t.context.server.close();
 });
-
-test("Test passes", (t) => {
-    	t.pass();
-    });

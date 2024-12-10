@@ -16,6 +16,9 @@ var options = {
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
 var app = expressAppConfig.getApp();
 
+// Export the app for testing and other purposes
+module.exports = app;
+
 // Initialize the Swagger middleware
 if( process.env.NODE_ENV !== "test" ){
     http.createServer(app).listen(serverPort, function () {
