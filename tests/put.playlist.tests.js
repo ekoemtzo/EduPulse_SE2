@@ -51,7 +51,7 @@ test('PUT /user/:userId/playlist/:playlistId returns user not found', async (t) 
 
 test('PUT /user/:userId/playlist/:playlistId returns playlist not found', async (t) => {
     const userId = 1;
-    const playlistId = 999; // Non-existent playlist
+    const playlistId = 999;
     const updateData = { name: 'Updated Playlist' };
     
     const { body, statusCode } = await t.context.got.put(`user/${userId}/playlist/${playlistId}`, {
