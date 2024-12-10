@@ -68,16 +68,18 @@ exports.findPosts = function(title,category) {
  **/
 exports.showPost = function(postId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+    // Simulate a check for post existence (you can replace this with your actual DB call)
+    const postExists = postId === 1; // Assume only postId 1 exists (mock example)
 
+    if (!postExists) {
+      return resolve(null);  // Post not found
+    }
+
+    // Simulate a post object for postId 1
+    const post = { postId: 1, title: 'Post 1', content: 'This is the content of post 1' };
+    resolve(post);
+  });
+};
 
 /**
  * Returns all the Posts of a user
@@ -88,15 +90,19 @@ exports.showPost = function(postId) {
  **/
 exports.showUserPosts = function(userId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    // Simulate a check for user existence (you can replace this with your actual DB call)
+    const userExists = userId === 1; // Assume only userId 1 exists (mock example)
+    
+    if (!userExists) {
+      return resolve(null);  // User not found
     }
+
+    // Simulate finding posts for user 1
+    const posts = [{ postId: 1, title: 'Post 1' }, { postId: 2, title: 'Post 2' }];
+    resolve(posts);
   });
-}
+};
+
 
 
 /**
