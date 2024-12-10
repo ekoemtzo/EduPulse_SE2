@@ -23,6 +23,10 @@ test.after.always(async (t) => {
   t.context.server.close();
 });
 
+<<<<<<< HEAD
 test("Test passes", (t) => {
      t.pass();
  });
+=======
+  
+>>>>>>> origin/valkisti
