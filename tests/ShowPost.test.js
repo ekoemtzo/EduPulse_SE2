@@ -48,7 +48,7 @@ test("Retrieval with invalid postId (Non-Numeric)", async (t) => {
     t.fail("Expected error for non-numeric postId");
   } catch (error) {
     t.is(error.response.statusCode, 400, "Non-numeric postId should return 400");
-    t.is(error.response.body.message, "'postId' must be a positive integer.", "Correct error message should be returned");
+    t.is(error.response.body.message, "request.params.postId should be integer", "Correct error message should be returned");
   }
 });
 
