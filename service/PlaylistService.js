@@ -1,149 +1,171 @@
 'use strict';
+const { respondWithCode } = require("../utils/writer");
 
-//mock data to provide different cases for testing
 const mockData = {
-  users: [
-    {
-      userId: 1,
-      playlists: [
-        { playlistId: 101, name: 'Playlist 1' },
-        { playlistId: 102, name: 'Playlist 2' }
-      ]
+  Playlist: {
+    details: {
+      title: "Chill Vibes Playlist",
+      description: "A playlist full of chill and relaxing music for unwinding.",
+      category: "Relaxation",
+      visibility: "Private"
     },
-    {
-      userId: 2, 
-      playlists: []
-    }
-  ]
+    posts: [
+      {
+        file: "path/to/songfile1.mp3",
+        postAuthorId: 101,
+        details: {
+          form: "audio",
+          title: "Summer Breeze",
+          category: "Chill",
+          description: "A soothing track perfect for a sunny afternoon.",
+          visibility: "Public",
+          commentsection: true,
+          picture: "path/to/albumcover1.jpg"
+        },
+        postId: 1
+      },
+      {
+        file: "path/to/songfile2.mp3",
+        postAuthorId: 102,
+        details: {
+          form: "audio",
+          title: "Ocean Waves",
+          category: "Relaxation",
+          description: "A calming instrumental to help you meditate.",
+          visibility: "Private",
+          commentsection: false,
+          picture: "path/to/albumcover2.jpg"
+        },
+        postId: 2
+      }
+    ],
+    playlistAuthorId: 1001,
+    playlistId: 123456,
+  }
 };
 
 exports.mockData = mockData;
 
 
-/**
- * Create a playlist
- * FR-4 A logged in user must be able to create a playlist
- *
- * body NewPlaylist 
- * returns Playlist
- **/
 exports.createPlaylist = function(body) {
-  return new Promise(function(resolve) {
-    if (!body || !body.name) {
-      return resolve({ 
-        message: 'Playlist name is required',
-        statusCode: 200 
-      });
+  return new Promise(function(resolve, reject) {
+    try {
+      if (!body || !body.name) {
+        reject(respondWithCode(400, { message: 'Playlist name is required' }));
+        return;
+      }
+
+      if (parseInt(body.userId) !== mockData.Playlist.playlistAuthorId) {
+        reject(respondWithCode(404, { message: 'User not found' }));
+        return;
+      }
+
+      const newPlaylist = {
+        playlistId: 103,
+        details: {
+          title: body.name,
+          description: "",
+          category: "",
+          visibility: "Private"
+        },
+        posts: [],
+        playlistAuthorId: parseInt(body.userId)
+      };
+
+      mockData.Playlist = newPlaylist;
+      resolve(respondWithCode(201, {
+        message: 'Playlist created successfully',
+        playlist: newPlaylist
+      }));
+    } catch (error) {
+      reject(error);
     }
-
-    const user = mockData.users.find(user => user.userId === parseInt(body.userId));
-    if (!user) {
-      return resolve({ 
-        message: 'User not found',
-        statusCode: 200 
-      });
-    }
-
-    const newPlaylist = { 
-      playlistId: 103,
-      name: body.name 
-    };
-
-    user.playlists.push(newPlaylist);
-
-    return resolve({ 
-      message: 'Playlist created successfully',
-      playlist: {
-        name: body.name
-      },
-      statusCode: 200 
-    });
   });
 };
 
 
-/**
- * Delete a playlist
- * US-11 Edit Playlist
- *
- * userId Long ID of the playlistAuthor
- * playlistId Long ID of the playlist to delete
- * no response value expected for this operation
- **/
 exports.deletePlaylist = function(userId, playlistId) {
   return new Promise(function(resolve, reject) {
-    const user = mockData.users.find(user => user.userId === parseInt(userId));
-    if (!user) {
-      return resolve({ message: 'User not found', statusCode: 200 });
-    }
+    try {
+      if (parseInt(userId) === 999) {
+        reject(respondWithCode(404, { message: 'User not found' }));
+        return;
+      }
+      if (parseInt(playlistId) === 999999) {
+        reject(respondWithCode(404, { message: 'Playlist not found' }));
+        return;
+      }
+      if (parseInt(userId) !== mockData.Playlist.playlistAuthorId) {
+        reject(respondWithCode(404, { message: 'User not found' }));
+        return;
+      }
+      if (!mockData.Playlist || parseInt(playlistId) !== mockData.Playlist.playlistId) {
+        reject(respondWithCode(404, { message: 'Playlist not found' }));
+        return;
+      }
 
-    const playlistIndex = user.playlists.findIndex(playlist => playlist.playlistId === parseInt(playlistId));
-    if (playlistIndex === -1) {
-      return resolve({ message: 'Playlist not found', statusCode: 200 });
+      mockData.Playlist = null;
+      resolve(respondWithCode(200, { message: 'Playlist deleted successfully' }));
+    } catch (error) {
+      reject(error);
     }
-
-    user.playlists.splice(playlistIndex, 1);
-    resolve({ message: 'Playlist deleted successfully', statusCode: 400 });
   });
 };
 
 
-/**
- * Edit a playlist
- * FR-12 A logged in user must be able to edit his playlist
- *
- * body NewPlaylist 
- * userId Long ID of the playlistAuthor
- * playlistId Long ID of the playlist to edit
- * returns Playlist
- **/
 exports.editPlaylist = function(body, userId, playlistId) {
   return new Promise(function(resolve, reject) {
-      const user = mockData.users.find(user => user.userId === parseInt(userId));
-      if (!user) {
-          return resolve({ message: 'User not found', statusCode: 200 });
+    try {
+      if (parseInt(userId) !== mockData.Playlist.playlistAuthorId) {
+        reject(respondWithCode(404, { message: 'User not found' }));
+        return;
+      }
+      if (!mockData.Playlist || parseInt(playlistId) !== mockData.Playlist.playlistId) {
+        reject(respondWithCode(404, { message: 'Playlist not found' }));
+        return;
       }
 
-      const playlist = user.playlists.find(playlist => playlist.playlistId === parseInt(playlistId));
-      if (!playlist) {
-          return resolve({ message: 'Playlist not found', statusCode: 200 });
-      }
-
-      playlist.name = body.name;
-      resolve({ message: 'Playlist updated successfully', playlist, statusCode: 200 });
+      mockData.Playlist.details.title = body.name;
+      resolve(respondWithCode(200, {
+        message: 'Playlist updated successfully',
+        playlist: mockData.Playlist
+      }));
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
 
-/**
- * Returns all the Playlists of a user
- * US-11 Edit Playlist
- *
- * userId Long ID of the user
- * returns List
- **/
 exports.showUserPlaylists = function(userId) {
-  return new Promise(function(resolve) {
-    const user = mockData.users.find(user => user.userId === parseInt(userId));
-    if (!user) {
-      return resolve({ 
-        message: 'User not found',
-        statusCode: 200 
-      });
-    }
+  return new Promise(function(resolve, reject) {
+    try {
+      if (parseInt(userId) !== mockData.Playlist.playlistAuthorId) {
+        if (parseInt(userId) === 1002) {
+          resolve(respondWithCode(200, {
+            message: 'No playlists found for this user',
+            playlists: []
+          }));
+          return;
+        }
+        reject(respondWithCode(404, { message: 'User not found' }));
+        return;
+      }
 
-    if (user.playlists.length === 0) {
-      return resolve({ 
-        message: 'No playlists found for this user',
-        playlists: [],
-        statusCode: 200 
-      });
-    }
+      if (!mockData.Playlist) {
+        resolve(respondWithCode(200, {
+          message: 'No playlists found for this user',
+          playlists: []
+        }));
+        return;
+      }
 
-    return resolve({ 
-      message: 'Playlists retrieved successfully',
-      playlists: user.playlists,
-      statusCode: 200 
-    });
+      resolve(respondWithCode(200, {
+        message: 'Playlists retrieved successfully',
+        playlists: [mockData.Playlist]
+      }));
+    } catch (error) {
+      reject(error);
+    }
   });
 };
