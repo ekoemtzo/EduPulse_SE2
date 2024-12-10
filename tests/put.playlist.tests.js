@@ -1,24 +1,26 @@
-const test = require('ava').default;
-const listen = require('test-listen');
-const got = require('got');
-const http = require('node:http');
+const http = require("http");
+const test = require("ava");
+const got = require("got");
+const app = require("../index.js");
 
-const app = require('../index');
-
+/**
+ * Opens server, before tests.
+ */
 test.before(async (t) => {
-    t.context.server = http.createServer(app);
-    t.context.prefixUrl = 'http://localhost:8080'; 
-    t.context.got = got.extend({
-        http2: true,
-        throwHttpErrors: false,
-        responseType: 'json',
-        prefixUrl: t.context.prefixUrl, 
-    });
+  t.context.server = http.createServer(app);
+  const server = t.context.server.listen();
+  const { port } = server.address();
+  t.context.got = got.extend({
+    responseType: "json",
+    prefixUrl: `http://localhost:${port}`,
+  });
 });
 
-
-test.after.always((t) => {
-    t.context.server.close();
+/**
+ * Closes server, after tests.
+ */
+test.after.always(async (t) => {
+  t.context.server.close();
 });
 
 
