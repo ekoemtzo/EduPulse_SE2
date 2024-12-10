@@ -1,26 +1,4 @@
 const test = require('ava');
-const got = require('got');
-const app = require('../index');
-
-/**
- * Opens the server before the tests.
- */
-test.before(async (t) => {
-  t.context.server = app.listen();
-  const { port } = t.context.server.address();
-  t.context.got = got.extend({
-    prefixUrl: `http://localhost:${port}`,
-    responseType: 'json',
-  });
-});
-
-/**
- * Closes the server after the tests.
- */
-test.after.always(async (t) => {
-  t.context.server.close();
-});
-
 
 test("Successful retrieval of post (Happy Path)", async (t) => {
   const postId = 1; // Valid postId
