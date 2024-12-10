@@ -7,14 +7,12 @@ const app = require('../index');
 
 test.before(async (t) => {
     t.context.server = http.createServer(app);
-    // If your server is running on port 8080, set the prefixUrl accordingly
-    t.context.prefixUrl = 'http://localhost:8080'; // Set to correct port
-
+    t.context.prefixUrl = 'http://localhost:8080';
     t.context.got = got.extend({
         http2: true,
         throwHttpErrors: false,
         responseType: 'json',
-        prefixUrl: t.context.prefixUrl, // Use the correct prefixUrl here
+        prefixUrl: t.context.prefixUrl,
     });
 });
 
@@ -42,9 +40,9 @@ test('GET /user/:userId/playlist returns error when user not found', async (t) =
 });
 
 test('GET /user/:userId/playlist returns empty array when user has no playlists', async (t) => {
-    const userId = 3; // User with no playlists
+    const userId = 2;
     const { body, statusCode } = await t.context.got.get(`user/${userId}/playlist`);
 
-    t.is(body.message, 'Playlists retrieved successfully');
+    t.is(body.message, 'No playlists found for this user');
     t.is(statusCode, 200);
 });
