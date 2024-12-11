@@ -515,9 +515,6 @@ components:
           type: string
         authorId:
           type: integer
-        mediaId:
-          type: integer
-          description: it can be a liveId or a postId
     Comment:
       allOf:
       - $ref: '#/components/schemas/NewComment'
@@ -528,6 +525,8 @@ components:
           commentId:
             type: integer
             format: int64
+          postId:
+            type: integer
     NewPlaylist:
       type: object
       properties:
