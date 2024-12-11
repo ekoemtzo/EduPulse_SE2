@@ -48,13 +48,7 @@ exports.deletePost = function (userId, postId) {
           })
         );
       }
-    } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
-    }
+    } catch (error) { reject( respondWithCode(500, { message: "Internal Server Error"}) ); }
   });
 };
 
@@ -70,15 +64,6 @@ exports.deletePost = function (userId, postId) {
 exports.editPost = function (body, userId, postId) {
   return new Promise(function (resolve, reject) {
     try {
-      // Validate userId and postId are integers
-      if (!Number.isInteger(userId) || !Number.isInteger(postId)) {
-        return reject(
-          respondWithCode(400, {
-            message: "userId and postId must be integers.",
-          })
-        );
-      }
-
       // Find the post in the mock database
       const postIndex = mockDatabase.posts.findIndex(
         (post) => post.postId === postId && post.userId === userId
@@ -113,13 +98,7 @@ exports.editPost = function (body, userId, postId) {
 
       // Return the updated post
       resolve(updatedPost);
-    } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
-    }
+    } catch (error) { reject( respondWithCode(500, { message: "Internal Server Error" }) );  }
   });
 };
 
@@ -154,14 +133,7 @@ exports.findPosts = function (title, category) {
 
       // Αν υπάρχουν αποτελέσματα, επιστρέφουμε τη λίστα
       resolve(filteredPosts);
-    } catch (error) {
-      // Αν υπάρχει κάποιο σφάλμα, επιστρέφουμε 500
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
-    }
+    } catch (error) { reject( respondWithCode(500, {message: "Internal Server Error"})); } // Αν υπάρχει κάποιο σφάλμα, επιστρέφουμε 500
   });
 };
 
@@ -252,18 +224,6 @@ exports.uploadPost = function (body) {
 
       // Return the created post
       resolve(newPost);
-    } catch (error) {
-      reject(
-        respondWithCode(500, {
-          message: "Internal Server Error",
-        })
-      );
-    }
+    } catch (error) { reject( respondWithCode(500, { message: "Internal Server Error",}) ); }
   });
 };
-
-
-
-
-
-

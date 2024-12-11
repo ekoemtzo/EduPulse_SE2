@@ -21,8 +21,10 @@ test('GET /user/:userId/playlist returns error when user not found', async (t) =
 
 test('GET /user/:userId/playlist returns empty array when user has no playlists', async (t) => {
   const userId = 1002;
+  try{
   const { body, statusCode } = await t.context.got.get(`user/${userId}/playlist`);
-
-  t.is(body.message, 'No playlists found for this user');
-  t.is(statusCode, 200);
+  } catch(error) {
+    t.is(error.response.body.message, 'No playlists found for this user');
+    t.is(error.response.statusCode, 404);
+  }
 });

@@ -44,8 +44,13 @@ const mockData = {
   }
 };
 
-exports.mockData = mockData;
-
+const mockUsers = {
+  users:[
+  {userId: 1000},
+  {userId: 1001},
+  {userId: 1002},
+]
+};
 
 exports.createPlaylist = function(body) {
   return new Promise(function(resolve, reject) {
@@ -77,9 +82,7 @@ exports.createPlaylist = function(body) {
         message: 'Playlist created successfully',
         playlist: newPlaylist
       }));
-    } catch (error) {
-      reject(error);
-    }
+    } catch (error) { reject(error); }
   });
 };
 
@@ -87,28 +90,18 @@ exports.createPlaylist = function(body) {
 exports.deletePlaylist = function(userId, playlistId) {
   return new Promise(function(resolve, reject) {
     try {
-      if (parseInt(userId) === 999) {
-        reject(respondWithCode(404, { message: 'User not found' }));
-        return;
+      if( userId !== mockData.Playlist.playlistAuthorId) {
+        return reject(respondWithCode(404, { message: 'User not found' }));
       }
-      if (parseInt(playlistId) === 999999) {
-        reject(respondWithCode(404, { message: 'Playlist not found' }));
-        return;
-      }
-      if (parseInt(userId) !== mockData.Playlist.playlistAuthorId) {
-        reject(respondWithCode(404, { message: 'User not found' }));
-        return;
-      }
-      if (!mockData.Playlist || parseInt(playlistId) !== mockData.Playlist.playlistId) {
-        reject(respondWithCode(404, { message: 'Playlist not found' }));
-        return;
+      if (!mockData.Playlist || playlistId !== mockData.Playlist.playlistId) {
+        return reject(respondWithCode(404, { message: 'Playlist not found' }));
       }
 
-      mockData.Playlist = null;
+      // for the purpose of this project we will not be really deleting the playlist 
+      // in the mock data, so that it can be used in many different tests
+
       resolve(respondWithCode(200, { message: 'Playlist deleted successfully' }));
-    } catch (error) {
-      reject(error);
-    }
+    } catch (error) { reject(error); }
   });
 };
 
@@ -130,9 +123,7 @@ exports.editPlaylist = function(body, userId, playlistId) {
         message: 'Playlist updated successfully',
         playlist: mockData.Playlist
       }));
-    } catch (error) {
-      reject(error);
-    }
+    } catch (error) { reject(error); }
   });
 };
 
@@ -140,32 +131,21 @@ exports.editPlaylist = function(body, userId, playlistId) {
 exports.showUserPlaylists = function(userId) {
   return new Promise(function(resolve, reject) {
     try {
-      if (parseInt(userId) !== mockData.Playlist.playlistAuthorId) {
-        if (parseInt(userId) === 1002) {
-          resolve(respondWithCode(200, {
-            message: 'No playlists found for this user',
-            playlists: []
-          }));
-          return;
-        }
-        reject(respondWithCode(404, { message: 'User not found' }));
-        return;
+      if ( !mockUsers.users.some((user) => user.userId === userId) ) {
+        return reject(respondWithCode(404, { message: 'User not found' }));
       }
 
-      if (!mockData.Playlist) {
-        resolve(respondWithCode(200, {
+      if (userId !== mockData.Playlist.playlistAuthorId) {
+        return reject(respondWithCode(404, {
           message: 'No playlists found for this user',
           playlists: []
         }));
-        return;
       }
 
       resolve(respondWithCode(200, {
         message: 'Playlists retrieved successfully',
         playlists: [mockData.Playlist]
       }));
-    } catch (error) {
-      reject(error);
-    }
+    } catch (error) { reject(error); }
   });
 };

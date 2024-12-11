@@ -31,7 +31,7 @@
   },
   "ava":{
     "files":[
-      "./tests/*.test.js"
+      "./tests/*/*.test.js"
     ],
     "require":[
       "./tests/setup.js"

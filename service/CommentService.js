@@ -37,13 +37,6 @@ exports.commentPost = function(body,postId) {
         );
       }
 
-      // Returns a bad request if postId or authorId are not integers
-      if( !Number.isInteger(postId) || !Number.isInteger(body.authorId) ){
-        return reject(
-          respondWithCode(400, {message: "The postId and authorId must be an integer."})
-        );
-      }
-
       // Returns a bad request if the postId doesn't match any existing posts
       if( !mockDatabase.posts.some((post) => post.postId === postId) ){
         return reject(
@@ -66,11 +59,7 @@ exports.commentPost = function(body,postId) {
       resolve(newComment);
 
     }
-    catch(error){
-      reject(
-        respondWithCode(500, "Internal Server Error")
-      );
-    }
+    catch(error){ reject( respondWithCode(500, "Internal Server Error") ); }
   });
 }
 
@@ -86,20 +75,6 @@ exports.commentPost = function(body,postId) {
 exports.deletePostComment = function(postId,commentId) {
   return new Promise(function(resolve, reject) {
     try{
-      // Returns a bad request if any parameters are missing
-      if( !postId || !commentId){
-        return reject(
-          respondWithCode(400, {message: "The postId and commentId are required to delete a comment."})
-        );
-      }
-
-      // Returns a bad request if postId or commentId are not integers
-      if( !Number.isInteger(postId) || !Number.isInteger(commentId)){
-        return reject(
-          respondWithCode(400, {message: "The postId and commentId must be an integer."})
-        )
-      }
-
       // Returns a bad request if the postId doesn't match any existing posts
       if( !mockDatabase.posts.some((post) => post.postId === postId) ){
         return reject(
@@ -123,11 +98,7 @@ exports.deletePostComment = function(postId,commentId) {
       }
 
     }
-    catch(error){
-      reject(
-        respondWithCode(500, "Internal Server Error")
-      );
-    }
+    catch(error){ reject( respondWithCode(500, "Internal Server Error") ); }
   });
 }
 

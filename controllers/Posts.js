@@ -49,9 +49,8 @@ module.exports.showPost = function showPost(req, res, next, postId) {
       // If post is found, return it as the response
       utils.writeJson(res, response);
     })
-    .catch(function (error) {
-      // Handle any unexpected errors
-      utils.writeJson(res, error);
+    .catch(function (error) { 
+      utils.writeJson(res, error); // Handle any unexpected errors
     });
 };
 
