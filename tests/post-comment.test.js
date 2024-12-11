@@ -87,7 +87,7 @@ test("Post Comment - Undefined 'postId' parameter", async (t) => {
   }
   catch(error){
     // Check the response status code
-    t.is(error.response.statusCode, 400, "Expected the status code to be 400 for missing property, but got " + error.response.statusCode);
+    t.is(error.response.statusCode, 400, "Expected the status code to be 400 for undefined parameter, but got " + error.response.statusCode);
 
     // Check if the error message mentions the undefined 'postId' parameter
     t.regex(error.response.body.message, /postId/, "Error message should indicate the undefined 'postId' parameter.");

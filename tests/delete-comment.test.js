@@ -2,7 +2,7 @@ const test = require("ava");
 
 test("Delete Comment - Successfully deletes a comment", async (t) => {
   try {
-    // Set the postId and commentId for submitting a new comment
+    // Set the postId and commentId for the comment to be deleted
     const postId = 8;
     const commentId = 4;
 
@@ -20,7 +20,7 @@ test("Delete Comment - Successfully deletes a comment", async (t) => {
 });
 
 test("Delete Comment - Undefined 'postId' parameter", async (t) => {
-  // Set the postId and commentId for submitting a new comment
+  // Set the postId and commentId for the comment to be deleted
   const postId = undefined;
   const commentId = 4;
 
@@ -40,7 +40,7 @@ test("Delete Comment - Undefined 'postId' parameter", async (t) => {
 })
 
 test("Delete Comment - Undefined 'commentId' parameter", async (t) => {
-  // Set the postId and commentId for submitting a new comment
+  // Set the postId and commentId for the comment to be deleted
   const postId = 8;
   const commentId = undefined;
 
@@ -59,8 +59,8 @@ test("Delete Comment - Undefined 'commentId' parameter", async (t) => {
   t.is(error.response.body.message,"request.params.commentId should be integer");
 })
 
-test("Delete Comment -Wrong type 'postId' parameter", async (t) => {
-  // Set the postId and commentId for submitting a new comment
+test("Delete Comment - Wrong type 'postId' parameter", async (t) => {
+  // Set the postId and commentId for the comment to be deleted
   const postId = "bestPost";
   const commentId = 4;
 
@@ -79,8 +79,8 @@ test("Delete Comment -Wrong type 'postId' parameter", async (t) => {
    t.is(error.response.body.message,"request.params.postId should be integer"); 
 })
 
-test("Delete Comment -Wrong type 'commentId' parameter", async (t) => {
-  // Set the postId and commentId for submitting a new comment
+test("Delete Comment - Wrong type 'commentId' parameter", async (t) => {
+  // Set the postId and commentId for the comment to be deleted
   const postId = 8;
   const commentId = "myComment";
 
@@ -100,7 +100,7 @@ test("Delete Comment -Wrong type 'commentId' parameter", async (t) => {
 })
 
 test("Delete Comment - Attempt to delete a comment from a non-existent post", async (t) => {
-  // Set the postId and commentId for submitting a new comment
+  // Set the postId and commentId for the comment to be deleted
   const postId = 37;
   const commentId = 3;
 
@@ -118,7 +118,7 @@ test("Delete Comment - Attempt to delete a comment from a non-existent post", as
 })
 
 test("Delete Comment - Attempt to delete a non-existent comment", async (t) => {
-  // Set the postId and commentId for submitting a new comment
+  // Set the postId and commentId for the comment to be deleted
   const postId = 8;
   const commentId = 10;
 
@@ -128,7 +128,7 @@ test("Delete Comment - Attempt to delete a non-existent comment", async (t) => {
   );
 
   // Check the response status code
-  t.is(error.response.statusCode, 404, "Expected the status code to be 404 for non-existent post, but got" + error.response.statusCode);
+  t.is(error.response.statusCode, 404, "Expected the status code to be 404 for non-existent comment, but got" + error.response.statusCode);
 
   // Check the exact expected error message
   t.is(error.response.body.message,"Comment could not be found.");
