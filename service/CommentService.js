@@ -33,21 +33,21 @@ exports.commentPost = function(body,postId) {
       // Returns a bad request if any parameters are missing
       if ( !postId || !body.content || !body.authorId ){
         return reject(
-          respondWith(400, {message: "The postId, authorId and content are required to post a comment."})
+          respondWithCode(400, {message: "The postId, authorId and content are required to post a comment."})
         );
       }
 
       // Returns a bad request if postId or authorId are not integers
       if( !Number.isInteger(postId) || !Number.isInteger(body.authorId) ){
         return reject(
-          respondWith(400, {message: "The postId and authorId must be an integer."})
+          respondWithCode(400, {message: "The postId and authorId must be an integer."})
         );
       }
 
       // Returns a bad request if the postId doesn't match any existing posts
       if( !mockDatabase.posts.some((post) => post.postId === postId) ){
         return reject(
-          respondWith(404, {message: "Post could not be found."})
+          respondWithCode(404, {message: "Post could not be found."})
         );
       }
       
@@ -68,7 +68,7 @@ exports.commentPost = function(body,postId) {
     }
     catch(error){
       reject(
-        respondWith(500, "Internal Server Error")
+        respondWithCode(500, "Internal Server Error")
       );
     }
   });
@@ -89,21 +89,21 @@ exports.deletePostComment = function(postId,commentId) {
       // Returns a bad request if any parameters are missing
       if( !postId || !commentId){
         return reject(
-          respondWith(400, {message: "The postId and commentId are required to delete a comment."})
+          respondWithCode(400, {message: "The postId and commentId are required to delete a comment."})
         );
       }
 
       // Returns a bad request if postId or commentId are not integers
       if( !Number.isInteger(postId) || !Number.isInteger(commentId)){
         return reject(
-          respondWith(400, {message: "The postId and commentId must be an integer."})
+          respondWithCode(400, {message: "The postId and commentId must be an integer."})
         )
       }
 
       // Returns a bad request if the postId doesn't match any existing posts
       if( !mockDatabase.posts.some((post) => post.postId === postId) ){
         return reject(
-          respondWith(404, {message: "Post could not be found."})
+          respondWithCode(404, {message: "Post could not be found."})
         );
       }
 
@@ -113,7 +113,7 @@ exports.deletePostComment = function(postId,commentId) {
       if(commentIndex === -1) {
         // Returns a bad request if the commentId doesn't match any existing comments
         return reject(
-          respondWith(404, {message: "Comment could not be found."})
+          respondWithCode(404, {message: "Comment could not be found."})
         );
       }
       else{
@@ -125,7 +125,7 @@ exports.deletePostComment = function(postId,commentId) {
     }
     catch(error){
       reject(
-        respondWith(500, "Internal Server Error")
+        respondWithCode(500, "Internal Server Error")
       );
     }
   });
