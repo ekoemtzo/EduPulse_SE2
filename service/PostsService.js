@@ -1,4 +1,14 @@
 'use strict';
+const { respondWithCode } = require("../utils/writer");
+
+const mockDatabase = {
+  posts: [
+    { postId: 1, userId: 1, title: "Electronics", category: "Article" },
+    { postId: 2, userId: 456, title: "All about chemistry", category: "Podcast" },
+    { postId: 3, userId: 789, title: "Student Campus", category: "Podcast" },
+    { postId: 4, userId: 101, title: "Fitness and Health", category: "Article" },
+  ],
+};
 
 
 /**
@@ -9,12 +19,38 @@
  * postId Long ID of the post to delete
  * no response value expected for this operation
  **/
-exports.deletePost = function(userId,postId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
-}
+exports.deletePost = function (userId, postId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      //Validate that postId and userId are valid integers
+      if (postId <= 0 || userId <= 0) {
+        return reject(
+          respondWithCode(400, { message: "'postId' and 'userId' must be positive integers." })
+        );
+      }
 
+      //Find the post to delete
+      const postIndex = mockDatabase.posts.findIndex(
+        (post) => post.postId === postId && post.userId === userId
+      );
+
+      if (postIndex !== -1) {
+      //Post found, delete it
+        mockDatabase.posts.splice(postIndex, 1);
+        resolve({
+          message: "Post deleted successfully",
+        });
+      } else {
+        //Post not found
+        return reject(
+          respondWithCode(404, {
+            message: `No post found with postId: ${postId} for userId: ${userId}`,
+          })
+        );
+      }
+    } catch (error) { reject( respondWithCode(500, { message: "Internal Server Error"}) ); }
+  });
+};
 
 /**
  * Edit a post
@@ -25,17 +61,46 @@ exports.deletePost = function(userId,postId) {
  * postId Long ID of the post to edit
  * returns Post
  **/
-exports.editPost = function(body,userId,postId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.editPost = function (body, userId, postId) {
+  return new Promise(function (resolve, reject) {
+    try {
+      // Find the post in the mock database
+      const postIndex = mockDatabase.posts.findIndex(
+        (post) => post.postId === postId && post.userId === userId
+      );
+
+      // If post not found, return 404
+      if (postIndex === -1) {
+        return reject(
+          respondWithCode(404, {
+            message: `No post found with postId: ${postId} for userId: ${userId}.`,
+          })
+        );
+      }
+
+      // Validate the body for required fields
+      if (!body.title || !body.category) {
+        return reject(
+          respondWithCode(400, {
+            message: "Both title and category are required to edit a post.",
+          })
+        );
+      }
+
+      // Update the post
+      const updatedPost = {
+        ...mockDatabase.posts[postIndex],
+        title: body.title,
+        category: body.category,
+      };
+
+      mockDatabase.posts[postIndex] = updatedPost;
+
+      // Return the updated post
+      resolve(updatedPost);
+    } catch (error) { reject( respondWithCode(500, { message: "Internal Server Error" }) );  }
   });
-}
+};
 
 
 /**
@@ -46,17 +111,31 @@ exports.editPost = function(body,userId,postId) {
  * category String The category of the posts I am searching (optional)
  * returns List
  **/
-exports.findPosts = function(title,category) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.findPosts = function (title, category) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      // Φιλτράρισμα των posts με βάση title και category
+        const filteredPosts = mockDatabase.posts.filter((post) => {
+        const matchesTitle = title ? post.title.includes(title) : true;
+        const matchesCategory = category ? post.category === category : true;
+        return matchesTitle && matchesCategory;
+      });
+
+      // Αν δεν υπάρχουν αποτελέσματα, επιστρέφουμε 404
+      if (filteredPosts.length === 0) {
+        return reject(
+          respondWithCode(404, {
+            message: "No posts found matching the given criteria.",
+          })
+        );
+      }
+
+      // Αν υπάρχουν αποτελέσματα, επιστρέφουμε τη λίστα
+      resolve(filteredPosts);
+    } catch (error) { reject( respondWithCode(500, {message: "Internal Server Error"})); } // Αν υπάρχει κάποιο σφάλμα, επιστρέφουμε 500
   });
-}
+};
 
 
 /**
@@ -68,16 +147,18 @@ exports.findPosts = function(title,category) {
  **/
 exports.showPost = function(postId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+    // Simulate a check for post existence (you can replace this with your actual DB call)
+    const postExists = postId === 1; // Assume only postId 1 exists (mock example)
 
+    if (!postExists) {
+      return resolve(null);  // Post not found
+    }
+
+    // Simulate a post object for postId 1
+    const post = { postId: 1, title: 'Post 1', content: 'This is the content of post 1' };
+    resolve(post);
+  });
+};
 
 /**
  * Returns all the Posts of a user
@@ -88,15 +169,19 @@ exports.showPost = function(postId) {
  **/
 exports.showUserPosts = function(userId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ "", "" ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    // Simulate a check for user existence (you can replace this with your actual DB call)
+    const userExists = userId === 1; // Assume only userId 1 exists (mock example)
+    
+    if (!userExists) {
+      return resolve(null);  // User not found
     }
+
+    // Simulate finding posts for user 1
+    const posts = [{ postId: 1, title: 'Post 1' }, { postId: 2, title: 'Post 2' }];
+    resolve(posts);
   });
-}
+};
+
 
 
 /**
@@ -106,15 +191,39 @@ exports.showUserPosts = function(userId) {
  * body NewPost Post to be uploaded
  * returns Post
  **/
-exports.uploadPost = function(body) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
+exports.uploadPost = function (body) {
+  return new Promise(function (resolve, reject) {
+    try {
+      // Validate the incoming body for required fields
+      if (!body.userId || !body.title || !body.category) {
+        return reject(
+          respondWithCode(400, {
+            message: "userId, title, and category are required to upload a post.",
+          })
+        );
+      }
 
+      if (!Number.isInteger(body.userId)) {
+        return reject(
+          respondWithCode(400, {
+            message: "userId must be an integer.",
+          })
+        );
+      }
+
+      // Create a new post object
+      const newPost = {
+        postId: mockDatabase.posts.length + 1, // Incrementing the post ID based on existing posts
+        userId: body.userId, // Assuming userId is provided in the body
+        title: body.title,
+        category: body.category,
+      };
+
+      // Add the new post to the mock database
+      mockDatabase.posts.push(newPost);
+
+      // Return the created post
+      resolve(newPost);
+    } catch (error) { reject( respondWithCode(500, { message: "Internal Server Error",}) ); }
+  });
+};
