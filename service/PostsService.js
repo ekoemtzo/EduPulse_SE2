@@ -146,7 +146,7 @@ exports.findPosts = function (title, category) {
  * returns Post
  **/
 exports.showPost = function(postId) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve, _) {
     // Simulate a check for post existence (you can replace this with your actual DB call)
     const postExists = postId === 1; // Assume only postId 1 exists (mock example)
 
@@ -168,7 +168,7 @@ exports.showPost = function(postId) {
  * returns List
  **/
 exports.showUserPosts = function(userId) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function(resolve, _) {
     // Simulate a check for user existence (you can replace this with your actual DB call)
     const userExists = userId === 1; // Assume only userId 1 exists (mock example)
     
