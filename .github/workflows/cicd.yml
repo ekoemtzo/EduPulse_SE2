@@ -2,6 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-deploy:
@@ -20,18 +25,14 @@ jobs:
       run: npm install
 
     - name: Run tests
-      run: npm run test
+   
+      run: npm test
 
+    - name: Install Render CLI
+      run: curl -fsSL https://cli.render.com/install | bash
+
+    - name: Authenticate Render
+      run: render login --api-key ${{ secrets.RENDER_API_KEY }}
 
     - name: Deploy to Render
-      env:
-        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-      run: |
-        curl -X POST \
-          -H "Authorization: Bearer $RENDER_API_KEY" \
-          -H "Content-Type: application/json" \
-          -d '{}' \
-          https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID}}/deploys
-
-
-    
+      run: render deploy service ${{ secrets.RENDER_SERVICE_ID}}
