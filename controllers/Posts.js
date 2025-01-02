@@ -4,7 +4,7 @@ var utils = require('../utils/writer.js');
 var Posts = require('../service/PostsService');
 
 module.exports = {
-  deletePost: function (req, res, userId, postId) {
+  deletePost: function (res, userId, postId) {
     Posts.deletePost(userId, postId)
       .then(function (response) {
         utils.writeJson(res, response);
@@ -14,7 +14,7 @@ module.exports = {
       });
   },
 
-  editPost: function (req, res, body, userId, postId) {
+  editPost: function (res, body, userId, postId) {
     Posts.editPost(body, userId, postId)
       .then(function (response) {
         utils.writeJson(res, response);
@@ -24,7 +24,7 @@ module.exports = {
       });
   },
 
-  findPosts: function (req, res, title, category) {
+  findPosts: function (res, title, category) {
     Posts.findPosts(title, category)
       .then(function (response) {
         utils.writeJson(res, response);
@@ -34,7 +34,7 @@ module.exports = {
       });
   },
 
-  showPost: function (req, res, postId) {
+  showPost: function (res, postId) {
     // Check if postId is a valid positive integer
     if (isNaN(postId) || postId <= 0) {
       return res.status(400).json({ message: "'postId' must be a positive integer." });
@@ -56,7 +56,7 @@ module.exports = {
       });
   },
 
-  showUserPosts: function (req, res, userId) {
+  showUserPosts: function (res, userId) {
     // Check if userId is a valid positive integer
     if (isNaN(userId) || userId <= 0) {
       return res.status(400).json({ message: "'userId' must be a positive integer." });
@@ -75,7 +75,7 @@ module.exports = {
       });
   },
 
-  uploadPost: function (req, res, body) {
+  uploadPost: function (res, body) {
     Posts.uploadPost(body)
       .then(function (response) {
         utils.writeJson(res, response);
