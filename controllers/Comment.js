@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Comment = require('../service/CommentService');
 
-module.exports.commentPost = function commentPost (req, res, next, body, postId) {
+module.exports.commentPost = function commentPost (req, res, _, body, postId) {
   Comment.commentPost(body, postId)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -13,7 +13,7 @@ module.exports.commentPost = function commentPost (req, res, next, body, postId)
     });
 };
 
-module.exports.deletePostComment = function deletePostComment (req, res, next, postId, commentId) {
+module.exports.deletePostComment = function deletePostComment (req, res, _, postId, commentId) {
   Comment.deletePostComment(postId, commentId)
     .then(function (response) {
       utils.writeJson(res, response);

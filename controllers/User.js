@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var User = require('../service/UserService');
 
-module.exports.getUser = function getUser(req, res, next, userId) {
+module.exports.getUser = function getUser(req, res, _, userId) {
   // Validate userId
   if (!Number.isInteger(Number(userId)) || Number(userId) <= 0) {
     return utils.writeJson(
@@ -24,7 +24,7 @@ module.exports.getUser = function getUser(req, res, next, userId) {
       }
       utils.writeJson(res, response);
     })
-    .catch(function (error) {
+    .catch(function (_) {
       utils.writeJson(res, { error: "Internal Server Error" }, 500);
     });
 };

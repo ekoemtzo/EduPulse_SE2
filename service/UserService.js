@@ -8,7 +8,7 @@
  * returns User
  **/
 exports.getUser = function (userId) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, _) {
     // Simulate a database lookup with mock data
     const mockUsers = [
       {
