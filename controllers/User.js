@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var User = require('../service/UserService');
 
-module.exports.getUser = function getUser(req, res, _, userId) {
+module.exports.getUser = function getUser(req, res, _next, userId) {
   // Validate userId
   if (!Number.isInteger(Number(userId)) || Number(userId) <= 0) {
     return utils.writeJson(
