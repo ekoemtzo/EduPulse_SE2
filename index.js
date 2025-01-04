@@ -19,10 +19,10 @@ var app = expressAppConfig.getApp();
 // Export the app for testing and other purposes
 module.exports = app;
 
-// Start the server only if this file is run directly
-if (require.main === module) {
+// Initialize the Swagger middleware
+if( process.env.NODE_ENV !== "test" ){
     http.createServer(app).listen(serverPort, function () {
-        console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
-        console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
-    });
+    console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+});
 }

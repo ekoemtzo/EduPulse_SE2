@@ -84,4 +84,49 @@ module.exports = {
         utils.writeJson(res, response);
       });
   }
+
+  // Call service to get the post
+  Posts.showPost(postId)
+    .then(function (response) {
+      if (!response) {
+        // If no post is found, return a 404 Not Found
+        return res.status(404).json({ error: "Post not found" });
+      }
+      // If post is found, return it as the response
+      utils.writeJson(res, response);
+    })
+    .catch(function (error) { 
+      utils.writeJson(res, error); // Handle any unexpected errors
+    });
+};
+
+
+module.exports.showUserPosts = function showUserPosts (req, res, next, userId) {
+  // Check if userId is a valid positive integer
+  if (isNaN(userId) || userId <= 0) {
+    return res.status(400).json({ message: "'userId' must be a positive integer." });
+  }
+
+  // Call service to get the posts
+  Posts.showUserPosts(userId)
+    .then(function (response) {
+      if (!response || response.length === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      utils.writeJson(res, response);
+    })
+    .catch(function (error) {
+      utils.writeJson(res, error);
+    });
+};
+
+
+module.exports.uploadPost = function uploadPost (req, res, next, body) {
+  Posts.uploadPost(body)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
 };
