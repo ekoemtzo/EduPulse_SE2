@@ -6,7 +6,8 @@ var utils = require('../utils/writer.js');
 // Importing the CommentService
 var Comment = require('../service/CommentService');
 
-module.exports.commentPost = function commentPost (req, res, next, body, postId) {
+
+module.exports.commentPost = function commentPost (__, res, _, body, postId) {
   // Calls the commentPost method from CommentService, passing the request body and post ID
   Comment.commentPost(body, postId)
     .then(function (response) {
@@ -19,7 +20,8 @@ module.exports.commentPost = function commentPost (req, res, next, body, postId)
     });
 };
 
-module.exports.deletePostComment = function deletePostComment (req, res, next, postId, commentId) {
+  
+module.exports.deletePostComment = function deletePostComment (__, res, _, postId, commentId) {
   // Calls the deletePostComment method from CommentService, passing the postId and commentId.
   Comment.deletePostComment(postId, commentId)
     .then(function (response) {

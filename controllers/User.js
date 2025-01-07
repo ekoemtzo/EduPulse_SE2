@@ -5,7 +5,8 @@ var utils = require('../utils/writer.js');
 // Importing the UserService
 var User = require('../service/UserService');
 
-module.exports.getUser = function getUser(req, res, next, userId) {
+
+module.exports.getUser = function getUser(__, res, _, userId) {
   // Validate userId by checking if the userId is a positive integer.
   if (!Number.isInteger(Number(userId)) || Number(userId) <= 0) {
     // If userId is invalid, respond with a 400 status and an appropriate error message.
@@ -30,7 +31,7 @@ module.exports.getUser = function getUser(req, res, next, userId) {
       // If a user is found, respond with the user data in JSON format.
       utils.writeJson(res, response);
     })
-    .catch(function (error) {
+    .catch(function (_) {
       // If an error occurs during the process, respond with a 500 status and an internal server error message.
       utils.writeJson(res, { error: "Internal Server Error" }, 500);
     });
