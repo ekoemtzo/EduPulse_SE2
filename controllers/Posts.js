@@ -3,7 +3,7 @@
 var utils = require('../utils/writer.js');
 var Posts = require('../service/PostsService');
 
-module.exports.deletePost = function deletePost (req, res, next, userId, postId) {
+module.exports.deletePost = function deletePost (_, res, __, userId, postId) {
   Posts.deletePost(userId, postId)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -13,7 +13,7 @@ module.exports.deletePost = function deletePost (req, res, next, userId, postId)
     });
 };
 
-module.exports.editPost = function editPost (req, res, next, body, userId, postId) {
+module.exports.editPost = function editPost (_, res, __, body, userId, postId) {
   Posts.editPost(body, userId, postId)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -23,7 +23,7 @@ module.exports.editPost = function editPost (req, res, next, body, userId, postI
     });
 };
 
-module.exports.findPosts = function findPosts (req, res, next, title, category) {
+module.exports.findPosts = function findPosts (_, res, __, title, category) {
   Posts.findPosts(title, category)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -33,7 +33,7 @@ module.exports.findPosts = function findPosts (req, res, next, title, category) 
     });
 };
 
-module.exports.showPost = function showPost(req, res, next, postId) {
+module.exports.showPost = function showPost(_, res, __, postId) {
   // Check if postId is a valid positive integer
   if (isNaN(postId) || postId <= 0) {
     return res.status(400).json({ message: "'postId' must be a positive integer." });
@@ -55,7 +55,7 @@ module.exports.showPost = function showPost(req, res, next, postId) {
 };
 
 
-module.exports.showUserPosts = function showUserPosts (req, res, next, userId) {
+module.exports.showUserPosts = function showUserPosts (_, res, __, userId) {
   // Check if userId is a valid positive integer
   if (isNaN(userId) || userId <= 0) {
     return res.status(400).json({ message: "'userId' must be a positive integer." });
@@ -75,7 +75,7 @@ module.exports.showUserPosts = function showUserPosts (req, res, next, userId) {
 };
 
 
-module.exports.uploadPost = function uploadPost (req, res, next, body) {
+module.exports.uploadPost = function uploadPost (_, res, __, body) {
   Posts.uploadPost(body)
     .then(function (response) {
       utils.writeJson(res, response);
